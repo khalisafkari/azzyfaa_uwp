@@ -46,7 +46,7 @@ jobs:
 
     - name: Build x64 release
       shell: powershell
-      run: npx react-native run-windows --root example --arch x64 --release --no-packager --no-deploy --logging --msbuildprops PackageCertificateKeyFile=${{github.workspace}}\GitHubActionsWorkflow.pfx
+      run: npx react-native run-windows --root example --arch x64 --release --no-packager --no-deploy --logging --msbuildprops PackageCertificateKeyFile=${{github.workspace}}\GitHubActionsWorkflow.pfx, PackageCertificatePassword="bilabong12"
 
     
     
