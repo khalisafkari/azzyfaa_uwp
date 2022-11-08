@@ -8,7 +8,8 @@
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "windows": "react-native run-windows"
+    "windows": "react-native run-windows",
+    "build:windows": "npx --no-install react-native run-windows --arch x64 --no-deploy --logging --msbuildprops PackageCertificateKeyFile=windows\\AzzyFaa\\AzzyFaa.pfx --release"
   },
   "dependencies": {
     "react": "18.1.0",
