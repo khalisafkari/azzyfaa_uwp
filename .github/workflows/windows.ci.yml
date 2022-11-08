@@ -57,7 +57,7 @@ jobs:
 
     - name: Build x64 release
       shell: powershell
-      run: npx react-native run-windows --arch x64 --release --no-packager --no-deploy --logging
+      run: npx --no-install react-native run-windows --arch x64 --no-deploy --logging --msbuildprops PackageCertificateKeyFile=windows\AzzyFaa\AzzyFaa.pfx --release
 
     #- name: Build x64 release
     #  shell: powershell
