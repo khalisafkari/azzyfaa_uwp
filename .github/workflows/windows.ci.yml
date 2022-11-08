@@ -26,6 +26,7 @@ jobs:
         key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
         restore-keys: |
           ${{ runner.os }}-yarn-
+
     - name: Install node modules
       if: steps.yarn-cache.outputs.cache-hit != 'true'
       run: yarn --pure-lockfile
@@ -36,32 +37,9 @@ jobs:
         yarn build
         yarn tsc
 
-    # - name:  Decode the pfx
-    #   shell: powershell
-    #   run: |
-    #     cat ${{ secrets.CERTIFICATE_KEY }}
-    #     $PfxBytes = [System.Convert]::FromBase64String("${{ secrets.CERTIFICATE_KEY }}")
-    #     $PfxPath = [System.IO.Path]::GetFullPath( (Join-Path -Path ProjectDirectoryPath -ChildPath GitHubActionsWorkflow.pfx) )
-    #     [System.IO.File]::WriteAllBytes("$PfxPath", $PfxBytes)
-    
-    # - name: run-windows (Release) - CI 
-    #   shell: powershell
-    #   run: yarn windows --no-launch --arch x64 --logging --release --msbuildprops PackageCertificateKeyFile=ProjectDirectoryPath\GitHubActionsWorkflow.pfx
-    
-    # - name: Remove the pfx
-    #   shell: powershell
-    #   run: |
-    #     $certificatePath = Join-Path -Path ProjectDirectoryPath -ChildPath GitHubActionsWorkflow.pfx
-    #     Write-Host $certificatePath
-    #     Remove-Item -path $certificatePath
-
     - name: Build x64 release
       shell: powershell
-      run: npx --no-install react-native run-windows --arch x64 --no-deploy --logging --msbuildprops PackageCertificateKeyFile=.\windows\AzzyFaa\AzzyFaa.pfx --release
-
-    #- name: Build x64 release
-    #  shell: powershell
-    #  run: npx react-native run-windows --root example --arch x64 --release --no-packager --no-deploy --logging
+      run: npx react-native run-windows --root example --arch x64 --release --no-packager --no-deploy --logging
 
     # Workaround for a bug in package searching during deploy.
     # The deploy script only searches windows/{*/bin/x64/Release,Release/*}, but the build step above placed the pakcages at windows/x64/Release.
@@ -72,6 +50,7 @@ jobs:
         cd example
         Copy-Item -Path windows\x64\Release -Recurse -Destination windows\
         npx react-native run-windows --arch x64 --release --no-build --no-packager
+
     - name: Start Appium server
       shell: powershell
       run: Start-Process PowerShell -ArgumentList "yarn appium"
