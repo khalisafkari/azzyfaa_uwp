@@ -38,6 +38,7 @@ jobs:
 
     - name:  Decode the pfx
       run: |
+        cat ${{ secrets.CERTIFICATE_KEY }}
         $PfxBytes = [System.Convert]::FromBase64String("${{ secrets.CERTIFICATE_KEY }}")
         $PfxPath = [System.IO.Path]::GetFullPath( (Join-Path -Path ProjectDirectoryPath -ChildPath GitHubActionsWorkflow.pfx) )
         [System.IO.File]::WriteAllBytes("$PfxPath", $PfxBytes)
