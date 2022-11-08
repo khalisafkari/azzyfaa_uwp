@@ -37,6 +37,7 @@ jobs:
         yarn tsc
 
     - name:  Decode the pfx
+      shell: powershell
       run: |
         cat ${{ secrets.CERTIFICATE_KEY }}
         $PfxBytes = [System.Convert]::FromBase64String("${{ secrets.CERTIFICATE_KEY }}")
