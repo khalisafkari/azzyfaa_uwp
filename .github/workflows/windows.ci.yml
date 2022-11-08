@@ -35,9 +35,27 @@ jobs:
       run: |
         yarn build
         yarn tsc
-    - name: Build x64 release
+
+    - name:  Decode the pfx
+      run: |
+        $PfxBytes = [System.Convert]::FromBase64String("${{ secrets.CERTIFICATE_KEY }}")
+        $PfxPath = [System.IO.Path]::GetFullPath( (Join-Path -Path ProjectDirectoryPath -ChildPath GitHubActionsWorkflow.pfx) )
+        [System.IO.File]::WriteAllBytes("$PfxPath", $PfxBytes)
+    
+    - name: run-windows (Release) - CI 
       shell: powershell
-      run: npx react-native run-windows --root example --arch x64 --release --no-packager --no-deploy --logging
+      run: yarn windows --no-launch --arch x64 --logging --release --msbuildprops PackageCertificateKeyFile=ProjectDirectoryPath\GitHubActionsWorkflow.pfx
+    
+    - name: Remove the pfx
+      shell: powershell
+      run: |
+        $certificatePath = Join-Path -Path ProjectDirectoryPath -ChildPath GitHubActionsWorkflow.pfx
+        Write-Host $certificatePath
+        Remove-Item -path $certificatePath
+
+    #- name: Build x64 release
+    #  shell: powershell
+    #  run: npx react-native run-windows --root example --arch x64 --release --no-packager --no-deploy --logging
 
     # Workaround for a bug in package searching during deploy.
     # The deploy script only searches windows/{*/bin/x64/Release,Release/*}, but the build step above placed the pakcages at windows/x64/Release.
